@@ -7,22 +7,30 @@ import (
 	"net/http"
 )
 
-type MovieHandler struct {
-	service *services.MovieService
+type MovieHandler interface {
+	GetMovies(c *gin.Context)
+	GetMovieById(c *gin.Context)
+	CreateMovie(c *gin.Context)
+	UpdateMovie(c *gin.Context)
+	DeleteMovie(c *gin.Context)
 }
 
-func NewMovieHandler(service *services.MovieService) *MovieHandler {
-	return &MovieHandler{
+type movieHandler struct {
+	service services.MovieService
+}
+
+func NewMovieHandler(service services.MovieService) MovieHandler {
+	return &movieHandler{
 		service: service,
 	}
 }
 
-func (h *MovieHandler) GetMovies(c *gin.Context) {
+func (h *movieHandler) GetMovies(c *gin.Context) {
 	movies := h.service.GetMovies()
 	c.JSON(http.StatusOK, movies)
 }
 
-func (h *MovieHandler) GetMovieById(c *gin.Context) {
+func (h *movieHandler) GetMovieById(c *gin.Context) {
 	id := c.Param("id")
 	movie, err := h.service.GetMovieById(id)
 	if err != nil {
@@ -32,7 +40,7 @@ func (h *MovieHandler) GetMovieById(c *gin.Context) {
 	c.JSON(http.StatusOK, movie)
 }
 
-func (h *MovieHandler) CreateMovie(c *gin.Context) {
+func (h *movieHandler) CreateMovie(c *gin.Context) {
 	var movie models.Movie
 	if err := c.ShouldBindJSON(&movie); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -42,7 +50,7 @@ func (h *MovieHandler) CreateMovie(c *gin.Context) {
 	c.JSON(http.StatusCreated, movie)
 }
 
-func (h *MovieHandler) UpdateMovie(c *gin.Context) {
+func (h *movieHandler) UpdateMovie(c *gin.Context) {
 	id := c.Param("id")
 	var movie models.Movie
 	if err := c.ShouldBindJSON(&movie); err != nil {
@@ -57,7 +65,7 @@ func (h *MovieHandler) UpdateMovie(c *gin.Context) {
 	c.JSON(http.StatusOK, movie)
 }
 
-func (h *MovieHandler) DeleteMovie(c *gin.Context) {
+func (h *movieHandler) DeleteMovie(c *gin.Context) {
 	id := c.Param("id")
 	err := h.service.DeleteMovie(id)
 	if err != nil {

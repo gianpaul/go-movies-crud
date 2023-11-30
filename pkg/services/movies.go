@@ -5,32 +5,40 @@ import (
 	"go-movies-crud/pkg/repository"
 )
 
-type MovieService struct {
+type MovieService interface {
+	GetMovies() []models.Movie
+	GetMovieById(id string) (*models.Movie, error)
+	CreateMovie(movie models.Movie)
+	UpdateMovie(id string, updatedMovie models.Movie) error
+	DeleteMovie(id string) error
+}
+
+type movieService struct {
 	repo repository.MovieRepository
 }
 
-func NewMovieService(repo repository.MovieRepository) *MovieService {
-	return &MovieService{
+func NewMovieService(repo repository.MovieRepository) MovieService {
+	return &movieService{
 		repo: repo,
 	}
 }
 
-func (s *MovieService) GetMovies() []models.Movie {
+func (s movieService) GetMovies() []models.Movie {
 	return s.repo.GetMovies()
 }
 
-func (s *MovieService) GetMovieById(id string) (*models.Movie, error) {
+func (s movieService) GetMovieById(id string) (*models.Movie, error) {
 	return s.repo.GetMovieById(id)
 }
 
-func (s *MovieService) CreateMovie(movie models.Movie) {
+func (s movieService) CreateMovie(movie models.Movie) {
 	s.repo.CreateMovie(movie)
 }
 
-func (s *MovieService) UpdateMovie(id string, updatedMovie models.Movie) error {
+func (s movieService) UpdateMovie(id string, updatedMovie models.Movie) error {
 	return s.repo.UpdateMovie(id, updatedMovie)
 }
 
-func (s *MovieService) DeleteMovie(id string) error {
+func (s movieService) DeleteMovie(id string) error {
 	return s.repo.DeleteMovie(id)
 }
