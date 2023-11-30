@@ -1,53 +1,36 @@
 package services
 
 import (
-	"errors"
 	"go-movies-crud/pkg/models"
+	"go-movies-crud/pkg/repository"
 )
 
 type MovieService struct {
-	movies []models.Movie
+	repo repository.MovieRepository
 }
 
-func NewMovieService() *MovieService {
+func NewMovieService(repo repository.MovieRepository) *MovieService {
 	return &MovieService{
-		movies: []models.Movie{},
+		repo: repo,
 	}
 }
 
 func (s *MovieService) GetMovies() []models.Movie {
-	return s.movies
+	return s.repo.GetMovies()
 }
 
 func (s *MovieService) GetMovieById(id string) (*models.Movie, error) {
-	for _, movie := range s.movies {
-		if movie.ID == id {
-			return &movie, nil
-		}
-	}
-	return nil, errors.New("movie not found")
+	return s.repo.GetMovieById(id)
 }
 
 func (s *MovieService) CreateMovie(movie models.Movie) {
-	s.movies = append(s.movies, movie)
+	s.repo.CreateMovie(movie)
 }
 
 func (s *MovieService) UpdateMovie(id string, updatedMovie models.Movie) error {
-	for i, movie := range s.movies {
-		if movie.ID == id {
-			s.movies[i] = updatedMovie
-			return nil
-		}
-	}
-	return errors.New("movie not found")
+	return s.repo.UpdateMovie(id, updatedMovie)
 }
 
 func (s *MovieService) DeleteMovie(id string) error {
-	for i, movie := range s.movies {
-		if movie.ID == id {
-			s.movies = append(s.movies[:i], s.movies[i+1:]...)
-			return nil
-		}
-	}
-	return errors.New("movie not found")
+	return s.repo.DeleteMovie(id)
 }

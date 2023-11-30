@@ -3,13 +3,15 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-movies-crud/pkg/handlers"
+	"go-movies-crud/pkg/repository"
 	"go-movies-crud/pkg/services"
 )
 
 func main() {
 	router := gin.Default()
 
-	movieService := services.NewMovieService()
+	movieInMemoryMovieRepository := repository.NewInMemoryMovieRepository()
+	movieService := services.NewMovieService(movieInMemoryMovieRepository)
 	movieHandler := handlers.NewMovieHandler(movieService)
 
 	router.GET("/movies", movieHandler.GetMovies)
