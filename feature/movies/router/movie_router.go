@@ -1,11 +1,11 @@
-package routers
+package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-movies-crud/pkg/handlers"
+	"go-movies-crud/feature/movies/handler"
 )
 
-func NewMoviesRouter(movieHandler handlers.MovieHandler, router *gin.Engine) {
+func NewMoviesRouter(movieHandler handler.MovieHandler, router *gin.Engine) {
 	movies := router.Group("/movies")
 	{
 		movies.GET("/", movieHandler.GetMovies)

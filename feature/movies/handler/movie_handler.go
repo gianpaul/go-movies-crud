@@ -1,9 +1,9 @@
-package handlers
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-movies-crud/pkg/models"
-	"go-movies-crud/pkg/services"
+	"go-movies-crud/feature/movies/model"
+	"go-movies-crud/feature/movies/service"
 	"net/http"
 )
 
@@ -16,10 +16,10 @@ type MovieHandler interface {
 }
 
 type movieHandler struct {
-	service services.MovieService
+	service service.MovieService
 }
 
-func NewMovieHandler(service services.MovieService) MovieHandler {
+func NewMovieHandler(service service.MovieService) MovieHandler {
 	return &movieHandler{
 		service: service,
 	}
@@ -41,7 +41,7 @@ func (h *movieHandler) GetMovieById(c *gin.Context) {
 }
 
 func (h *movieHandler) CreateMovie(c *gin.Context) {
-	var movie models.Movie
+	var movie model.Movie
 	if err := c.ShouldBindJSON(&movie); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -52,7 +52,7 @@ func (h *movieHandler) CreateMovie(c *gin.Context) {
 
 func (h *movieHandler) UpdateMovie(c *gin.Context) {
 	id := c.Param("id")
-	var movie models.Movie
+	var movie model.Movie
 	if err := c.ShouldBindJSON(&movie); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

@@ -2,32 +2,32 @@ package repository
 
 import (
 	"errors"
-	"go-movies-crud/pkg/models"
+	"go-movies-crud/feature/movies/model"
 )
 
 type MovieRepository interface {
-	GetMovies() []models.Movie
-	GetMovieById(id string) (*models.Movie, error)
-	CreateMovie(movie models.Movie)
-	UpdateMovie(id string, updatedMovie models.Movie) error
+	GetMovies() []model.Movie
+	GetMovieById(id string) (*model.Movie, error)
+	CreateMovie(movie model.Movie)
+	UpdateMovie(id string, updatedMovie model.Movie) error
 	DeleteMovie(id string) error
 }
 
 type InMemoryMovieRepository struct {
-	movies []models.Movie
+	movies []model.Movie
 }
 
 func NewInMemoryMovieRepository() *InMemoryMovieRepository {
 	return &InMemoryMovieRepository{
-		movies: []models.Movie{},
+		movies: []model.Movie{},
 	}
 }
 
-func (r *InMemoryMovieRepository) GetMovies() []models.Movie {
+func (r *InMemoryMovieRepository) GetMovies() []model.Movie {
 	return r.movies
 }
 
-func (r *InMemoryMovieRepository) GetMovieById(id string) (*models.Movie, error) {
+func (r *InMemoryMovieRepository) GetMovieById(id string) (*model.Movie, error) {
 	for _, movie := range r.movies {
 		if movie.ID == id {
 			return &movie, nil
@@ -36,11 +36,11 @@ func (r *InMemoryMovieRepository) GetMovieById(id string) (*models.Movie, error)
 	return nil, errors.New("movie not found")
 }
 
-func (r *InMemoryMovieRepository) CreateMovie(movie models.Movie) {
+func (r *InMemoryMovieRepository) CreateMovie(movie model.Movie) {
 	r.movies = append(r.movies, movie)
 }
 
-func (r *InMemoryMovieRepository) UpdateMovie(id string, updatedMovie models.Movie) error {
+func (r *InMemoryMovieRepository) UpdateMovie(id string, updatedMovie model.Movie) error {
 	for i, movie := range r.movies {
 		if movie.ID == id {
 			r.movies[i] = updatedMovie

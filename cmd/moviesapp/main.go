@@ -2,18 +2,18 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-movies-crud/pkg/di"
-	"go-movies-crud/pkg/routers"
+	"go-movies-crud/feature/movies/di"
+	"go-movies-crud/feature/movies/router"
 )
 
 func main() {
-	router := gin.Default()
+	routers := gin.Default()
 
 	movieHandler := di.InitializeMovieDependencies()
 
-	routers.NewMoviesRouter(movieHandler, router)
+	router.NewMoviesRouter(movieHandler, routers)
 
-	err := router.Run("localhost:8080")
+	err := routers.Run("localhost:8080")
 	if err != nil {
 		return
 	}
